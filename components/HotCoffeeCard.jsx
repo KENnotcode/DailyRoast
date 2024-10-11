@@ -21,8 +21,14 @@ const HotcoffeeCard = ({
     setSelectedCoffee(null);
   };
 
+  // Function to get the total count of items in the cart
+  const getCount = () => {
+    const data = JSON.parse(localStorage.getItem("cartItems")) || [];
+    return data.reduce((total, item) => total + item.quantity, 0);
+  };
+
   const handleAddToCart = () => {
-    const prevData = localStorage.getItem("data") || "[]";
+    const prevData = localStorage.getItem("cartItems") || "[]";
     let parsedData = JSON.parse(prevData);
 
     // Check if item with the same ID already exists
@@ -37,7 +43,7 @@ const HotcoffeeCard = ({
     }
 
     // Update local storage with modified or new data
-    localStorage.setItem("data", JSON.stringify(parsedData));
+    localStorage.setItem("cartItems", JSON.stringify(parsedData));
     setTotalQuantity(getCount());
   };
 
@@ -106,9 +112,9 @@ const HotcoffeeCard = ({
           >
             {/* Product Image */}
             <div className="w-1/2 h-full p-4 overflow-hidden">
-              <div className="h-full w-full flex items-center justify-center" style={{ transform: "scale(1.5))" }}>
+              <div className="h-full w-full flex items-center justify-center" style={{ transform: "scale(1.5)" }}>
                 <Image
-                  src={selectedCoffee.imageUrl}
+                  src={selectedCoffee.image} // Use the correct property for image
                   alt={selectedCoffee.name}
                   width={900}
                   height={900}
@@ -121,9 +127,8 @@ const HotcoffeeCard = ({
             <div className="w-1/2 p-6 flex flex-col justify-between bg-minicolor rounded-lg">
               <div className="flex-grow overflow-auto max-h-[485px]">
                 <h2 className="text-2xl font-bold mb-4">{selectedCoffee.name}</h2>
-
                 <ul>
-                <li>
+                  <li>
                     <strong>Description:</strong> {selectedCoffee.description}
                   </li>
                   <li>
@@ -132,7 +137,7 @@ const HotcoffeeCard = ({
                   <li>
                     <strong>Size:</strong> {selectedCoffee.size}
                   </li>
-                  <br/>
+                  <br />
                   <li className="text-lg">
                     For <strong>${selectedCoffee.price.toFixed(2)}</strong> only!
                   </li>

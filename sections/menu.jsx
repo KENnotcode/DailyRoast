@@ -11,9 +11,21 @@ import premiumTea from "@/constant/premiumteadata";
 
 const OurMenu = ({ setTotalQuantity, setCardLength }) => {
   const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [activeProduct, setActiveProduct] = useState(null);
   const [hotcoffeeActive, setHotcoffeeActive] = useState(null);
   const [premiumTeaActive, setPremiumTeaActive] = useState(null);
+  // Function to add items to the cart
+  const addToCart = (item) => {
+    setCartItems((prevItems) => [...prevItems, item]);
+    setTotalQuantity((prevQuantity) => prevQuantity + 1); // Update the total quantity
+  };
+
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(storedItems);
+    setTotalQuantity(storedItems.length); // Update total quantity from local storage
+  }, []);
 
   useEffect(() => {
     fetch("https://fake-coffee-api.vercel.app/api") // Ensure this is a correct API URL
@@ -40,6 +52,8 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
                   active={activeProduct === product.id}
                   handleClick={() => setActiveProduct(product.id)}
                   setCardLength={setCardLength}
+                  setTotalQuantity={setTotalQuantity}
+                  addToCart={addToCart}
                 />
               ))
             ) : (
@@ -63,6 +77,8 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
                   active={premiumTeaActive === product.id}
                   handleClick={() => setPremiumTeaActive(product.id)}
                   setCardLength={setCardLength}
+                  setTotalQuantity={setTotalQuantity}
+                  addToCart={addToCart}
                 />
               ))
             ) : (
@@ -85,8 +101,9 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
                   coffee={coffee}
                   active={hotcoffeeActive === coffee.id}
                   handleClick={() => setHotcoffeeActive(coffee.id)}
-                  setTotalQuantity={setTotalQuantity}
                   setCardLength={setCardLength}
+                  setTotalQuantity={setTotalQuantity}
+                  addToCart={addToCart}
                 />
               ))
             ) : (

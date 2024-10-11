@@ -16,7 +16,9 @@ const CoffeeCard = ({
   active,
   handleClick,
   setTotalQuantity,
+  addToCart
 }) => {
+  const [cartItem, setCartItem] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => setIsPopupOpen(true);
@@ -27,7 +29,27 @@ const CoffeeCard = ({
   };
 
   const handleAddToCart = () => {
-    // Logic to handle adding to cart
+    const item = { id, name, price };
+    addToCart(item);
+  
+    // Save to local storage
+    const existingItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    localStorage.setItem("cartItems", JSON.stringify([...existingItems, item]));
+  
+    // Sync with Firebase
+    syncCartWithFirebase([...existingItems, item]);
+  };
+  
+  // Function to sync cart items with Firebase
+  const syncCartWithFirebase = async (items) => {
+    const response = await fetch("/api/syncCart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(items),
+    });
+    return response.json();
   };
 
   return (
@@ -63,7 +85,10 @@ const CoffeeCard = ({
           <div className="flex justify-end mt-auto"> {/* This ensures the button is always at the bottom */}
             <button
               className="flex justify-center items-center bg-addtocartcolor px-4 py-2 rounded-lg hover:text-tahiti transition duration-300 mb-3"
-              onClick={handleAddToCart} // Add to cart functionality
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart();
+              }} // Add to cart functionality
             >
               <Image
                 src="/ADDTUCARTicon.png" // Ensure this path is correct

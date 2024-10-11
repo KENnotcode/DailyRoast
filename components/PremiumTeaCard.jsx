@@ -7,16 +7,37 @@ const PremiumTeaCard = ({
   active,
   handleClick,
   setCardLength,
+  addToCart // Assuming this is passed as a prop to handle cart updates
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
-  const { id, image, image_url, title, price, description, flavor } = product;
+  const { id, image, image_url, name, price, description, flavor } = product;
 
   const handleAddToCart = () => {
-    // Logic to handle adding to cart
+    const item = { id, name, price };
+    addToCart(item);
+    
+    // Save to local storage
+    const existingItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    localStorage.setItem("cartItems", JSON.stringify([...existingItems, item]));
+
+    // Sync with Firebase
+    syncCartWithFirebase([...existingItems, item]);
+  };
+
+  // Function to sync cart items with Firebase
+  const syncCartWithFirebase = async (items) => {
+    const response = await fetch("/api/syncCart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(items),
+    });
+    return response.json();
   };
 
   return (
@@ -30,7 +51,7 @@ const PremiumTeaCard = ({
       <div className="relative w-full h-full flex items-center justify-center">
         <Image
           src={image}
-          alt={title}
+          alt={name}
           fill
           className="object-cover rounded-xl"
           style={{ transform: "scale(1)" }}
@@ -44,14 +65,17 @@ const PremiumTeaCard = ({
       >
         <div className="flex-grow flex flex-col justify-between">
           <div>
-            <h2 className="text-[30px] font-semibold text-tahiti">{title}</h2>
+            <h2 className="text-[30px] font-semibold text-tahiti">{name}</h2>
             <p className="text-[20px] font-extralight text-tahiti mb-4">${price}</p>
           </div>
 
           <div className="flex justify-end mt-auto">
             <button
               className="flex justify-center items-center bg-addtocartcolor px-4 py-2 rounded-lg hover:text-tahiti transition duration-300 mb-3"
-              onClick={handleAddToCart}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent popup from opening when adding to cart
+                handleAddToCart();
+              }}
             >
               <Image
                 src="/ADDTUCARTicon.png"
@@ -80,7 +104,7 @@ const PremiumTeaCard = ({
               <div className="h-full w-full flex items-center justify-center" style={{ transform: "scale(1)" }}>
                 <Image
                   src={image_url}
-                  alt={title}
+                  alt={name}
                   width={1000}
                   height={1000}
                   className="object-cover rounded-lg"
@@ -91,7 +115,7 @@ const PremiumTeaCard = ({
             {/* Product Details */}
             <div className="w-1/2 p-6 flex flex-col justify-between bg-minicolor rounded-lg">
               <div className="flex-grow overflow-auto max-h-[485px]">
-                <h2 className="text-2xl font-bold mb-4">{title}</h2>
+                <h2 className="text-2xl font-bold mb-4">{name}</h2>
                 <p className="text-lg mb-4">{description}</p>
 
                 <ul>
