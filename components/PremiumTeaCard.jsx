@@ -7,7 +7,7 @@ const PremiumTeaCard = ({
   active,
   handleClick,
   setCardLength,
-  addToCart // Assuming this is passed as a prop to handle cart updates
+  addToCart
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 

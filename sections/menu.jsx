@@ -15,10 +15,12 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
   const [activeProduct, setActiveProduct] = useState(null);
   const [hotcoffeeActive, setHotcoffeeActive] = useState(null);
   const [premiumTeaActive, setPremiumTeaActive] = useState(null);
+  
   // Function to add items to the cart
   const addToCart = (item) => {
     setCartItems((prevItems) => [...prevItems, item]);
     setTotalQuantity((prevQuantity) => prevQuantity + 1); // Update the total quantity
+    localStorage.setItem("cartItems", JSON.stringify([...cartItems, item])); // Update local storage
   };
 
   useEffect(() => {
@@ -95,12 +97,12 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
         <div id="hotcoffee" style={{ overflowX: "auto" }}>
           <div className="mt-[50px] flex flex-row min-h-[70vh] gap-2">
             {hotCoffeeProducts.length > 0 ? (
-              hotCoffeeProducts.map((coffee) => (
+              hotCoffeeProducts.map((product) => (
                 <HotcoffeeCard
-                  key={coffee.id}
-                  coffee={coffee}
-                  active={hotcoffeeActive === coffee.id}
-                  handleClick={() => setHotcoffeeActive(coffee.id)}
+                  key={product.id}
+                  product={product}
+                  active={hotcoffeeActive === product.id}
+                  handleClick={() => setHotcoffeeActive(product.id)}
                   setCardLength={setCardLength}
                   setTotalQuantity={setTotalQuantity}
                   addToCart={addToCart}
