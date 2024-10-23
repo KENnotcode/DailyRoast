@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(226, 226, 226);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+#mouse {
+  scrollbar-width: thin;
+}
+
+@layer components {
+  .navbarLi {
+    @apply hover:text-hoverColor cursor-pointer duration-300;
+  }
+}
+
+@layer utilities {
+  .text-hoverColor:hover {
+    color: red;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.image-container {
+  width: 80%; /* Increase the width to make the image bigger */
+  margin: 0 auto;
+}
+
+.image-container img {
+  width: 100%; /* Ensure the image takes up the entire width of the container */
+}
+
+.info-box {
+  height: 20%; /* Adjust the height to make the box smaller */
+  padding: 5px 10px; /* Adjust padding for a more compact look */
+}
+
+.image-box-wrapper {
+  position: relative;
+}
+
+.info-box {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Transparent black background */
+  color: white;
+  text-align: center;
+}

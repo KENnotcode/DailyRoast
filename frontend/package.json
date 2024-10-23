@@ -1,0 +1,49 @@
+{
+  "name": "daily-roast",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "13.1.5",
+    "@supabase/supabase-js": "^2.45.6",
+    "antd": "^5.21.1",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "db": "^6.0.3",
+    "dotenv": "^16.4.5",
+    "eslint": "8.32.0",
+    "eslint-config-next": "13.1.5",
+    "express": "^4.21.1",
+    "firebase": "^10.14.1",
+    "framer-motion": "^8.5.5",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.2",
+    "mysql2": "^3.11.3",
+    "next": "13.1.5",
+    "pg": "^8.13.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
+    "react-modal": "^3.16.1",
+    "react-select": "^5.8.0",
+    "react-simple-typewriter": "^5.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4"
+  },
+  "description": "Daily Roast is an online coffee shop platform that brings the finest coffee blends directly to your home. Whether you're in need of a morning boost, a midday indulgence, or a perfect gift for a coffee lover, Daily Roast offers a seamless and premium coffee shopping experience. This project is built using modern web technologies and focuses on both user experience and functionality.",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
