@@ -84,7 +84,7 @@ const OurMenu = ({ setTotalQuantity, setCardLength }) => {
                 />
               ))
             ) : (
-              <p>Loading premium tea produasdcts...</p>
+              <p>Loading premium tea products...</p>
             )}
           </div>
         </div>
