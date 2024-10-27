@@ -1,7 +1,7 @@
 export const linkList = [
     {
         id:1,
-        href:"#home",
+        href:"/#home",
         title:"Home"
     },
     {
@@ -11,12 +11,12 @@ export const linkList = [
     },
     {
         id:9,
-        href:"#about",
+        href:"/#about",
         title:"About"
     },
     {
         id:10,
-        href:"#contact",
+        href:"/#contact",
         title:"Contact us"
     },
 ];
@@ -24,12 +24,12 @@ export const linkList = [
 export const CoffeTypes = [
     {
         id:3,
-        href:"#coffee-menu",
+        href:"/#coffee-menu",
         title:"Coffee"
     },
     {
         id:4,
-        href:"#premiumtea",
+        href:"/#premiumtea",
         title:"Premium Tea"
     },
     {
@@ -53,3 +53,4 @@ export const CoffeTypes = [
         title: "Pastries"
     }
 ]
+

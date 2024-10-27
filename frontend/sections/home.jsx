@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import Section from "@/components/Section";
 import Image from "next/image";
 import { useTypewriter, Cursor } from "react-simple-typewriter";
-import { useRouter } from "next/router";
 
 const Home = ({ cardLength }) => {
   const [text] = useTypewriter({
@@ -17,7 +16,12 @@ const Home = ({ cardLength }) => {
     delaySpeed: 2000,
   });
 
-  const router = useRouter();
+  const shopnowFunc = () => {
+    const coffeeMenuSection = document.getElementById("coffee-menu");
+    if(coffeeMenuSection){
+      coffeeMenuSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
   return (
     <Section id="home">
@@ -47,12 +51,8 @@ const Home = ({ cardLength }) => {
           </p>
           <div
             className="font-semibold tracking-wider mt-5 bg-[#333131] px-[2rem] py-[8px] rounded-xl cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault(); // Prevent any default behavior
-              router.push("/SignupLogin"); // Navigate to the SignupLogin page
-            }}
-          >
-            <p>Login Now!</p>
+            onClick={shopnowFunc}>
+            <p className="font-semibold tracking-wider">Shop Now!</p>
           </div>
         </div>
       </div>

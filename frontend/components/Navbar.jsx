@@ -1,29 +1,38 @@
 import Image from "next/image";
 import { Dropdown, Space, Badge, Menu } from "antd";
-import { DownOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from "@ant-design/icons"; // Import UserOutlined
 import Navlink from "./Navlink";
 import { CoffeTypes, linkList } from "@/utils/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const Navbar = ({ totalQuantity }) => {
+const Navbar = ({ totalQuantity, isSidebar }) => {
   const router = useRouter();
   const [navbar, setNavbar] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const MAX_DISPLAY_ITEMS = 5;
 
   useEffect(() => {
-    const changeBackground = () => {
-      setNavbar(window.scrollY >= 100);
-    };
+    if (!isSidebar) {
+      const changeBackground = () => {
+        setNavbar(window.scrollY >= 100);
+      };
 
-    window.addEventListener("scroll", changeBackground);
+      window.addEventListener("scroll", changeBackground);
 
-    return () => {
-      window.removeEventListener("scroll", changeBackground);
-    };
-  }, []);
+      return () => {
+        window.removeEventListener("scroll", changeBackground);
+      };
+    } else {
+      // If in sidebar, set navbar to true to have a static background
+      setNavbar(true);
+    }
+  }, [isSidebar]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -97,6 +106,20 @@ const Navbar = ({ totalQuantity }) => {
     </Menu>
   );
 
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="profile">
+        <Link href="/profile">Profile</Link>
+      </Menu.Item>
+      <Menu.Item key="login">
+        <Link href="/SignupLogin">Login</Link>
+      </Menu.Item>
+      <Menu.Item key="signup">
+        <Link href="/SignupLogin">Sign Up</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div
       className={`fixed top-0 left-0 w-full z-10 ${
@@ -149,15 +172,22 @@ const Navbar = ({ totalQuantity }) => {
               );
             })}
             {router.pathname !== "/cart" && (
-              <Dropdown overlay={cartMenu}>
-                <div className="hover:scale-150 transition-transform duration-300 ease-in-out">
-                  <Badge count={totalQuantityInCart} offset={[10, 0]}>
-                    <ShoppingCartOutlined
-                      style={{ fontSize: 24, color: "white" }}
-                    />
-                  </Badge>
-                </div>
-              </Dropdown>
+              <div className="flex gap-2">
+                <Dropdown overlay={cartMenu}>
+                  <div className="hover:scale-150 transition-transform duration-300 ease-in-out mr-5">
+                    <Badge count={totalQuantityInCart} offset={[10, 0]}>
+                      <ShoppingCartOutlined
+                        style={{ fontSize: 24, color: "white" }}
+                      />
+                    </Badge>
+                  </div>
+                </Dropdown>
+                <Dropdown overlay={userMenu}>
+                  <div className="hover:scale-150 transition-transform duration-300 ease-in-out">
+                    <UserOutlined style={{ fontSize: 24, color: "white" }} />
+                  </div>
+                </Dropdown>
+              </div>
             )}
           </ul>
         </div>

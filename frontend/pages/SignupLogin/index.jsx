@@ -65,7 +65,7 @@ const SignupLogin = () => {
         });
 
         message.success(response.data.msg);
-        router.push("/#about"); // Redirect to the dashboard or another page
+        router.push("/Dashboard"); // Redirect to the dashboard or another page
       }
     } catch (error) {
       message.error(error.response?.data.msg || error.message);
