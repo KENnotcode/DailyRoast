@@ -11,7 +11,8 @@ const SignupLogin = () => {
   const router = useRouter();
   const [isSignUp, setIsSignUp] = useState(false);
   const [inputValues, setInputValues] = useState({
-    fullname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -50,7 +51,8 @@ const SignupLogin = () => {
       if (isSignUp) {
         // Sign Up logic
         const response = await Axios.post("http://localhost:5000/api/signup", {
-          name: inputValues.fullname,
+          firstName: inputValues.firstName,
+          lastName: inputValues.lastName,
           email: inputValues.email,
           password: inputValues.password,
         });
@@ -130,24 +132,46 @@ const SignupLogin = () => {
         >
           {isSignUp && (
             <Form.Item
-              label="Full Name"
-              name="fullname"
+              name="firstName"
               rules={[
-                { required: true, message: "Please input your Full Name!" },
+                { required: true, message: "Please input your First Name!" },
               ]}
             >
               <Input
-                name="fullname"
-                value={inputValues.fullname}
+                name="firstName"
+                value={inputValues.firstName}
                 onChange={handleChange}
-                placeholder="Full Name"
+                placeholder="First Name"
                 style={{
                   border: "1px solid",
                   borderRadius: "8px",
                   backgroundColor: "#f9f9f9",
                   padding: "12px",
                 }}
-                aria-label="Full Name"
+                aria-label="First Name"
+              />
+            </Form.Item>
+          )}
+
+          {isSignUp && (
+            <Form.Item
+              name="lastName"
+              rules={[
+                { required: true, message: "Please input your Last Name!" },
+              ]}
+            >
+              <Input
+                name="lastName"
+                value={inputValues.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                style={{
+                  border: "1px solid",
+                  borderRadius: "8px",
+                  backgroundColor: "#f9f9f9",
+                  padding: "12px",
+                }}
+                aria-label="Last Name"
               />
             </Form.Item>
           )}

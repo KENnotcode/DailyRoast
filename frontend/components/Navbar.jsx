@@ -109,7 +109,7 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">
-        <Link href="/profile">Profile</Link>
+        <Link href="/MyProfile">Profile</Link>
       </Menu.Item>
       <Menu.Item key="login">
         <Link href="/SignupLogin">Login</Link>
