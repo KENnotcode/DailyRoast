@@ -59,8 +59,18 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
 
   const scrollToHome = () => {
     const homeSection = document.getElementById("home");
+
     if (homeSection) {
+      // If already on the homepage, scroll smoothly to #home
       homeSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Navigate to the homepage and scroll to #home once loaded
+      router.push("/#home").then(() => {
+        const homeSectionAfterNav = document.getElementById("home");
+        if (homeSectionAfterNav) {
+          homeSectionAfterNav.scrollIntoView({ behavior: "smooth" });
+        }
+      });
     }
   };
 
@@ -109,7 +119,7 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">
-        <Link href="/MyProfile">Profile</Link>
+        <Link href="/Dashboard/MyProfile">Profile</Link>
       </Menu.Item>
       <Menu.Item key="login">
         <Link href="/SignupLogin">Login</Link>
