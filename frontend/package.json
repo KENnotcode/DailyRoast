@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
+
   "dependencies": {
     "@next/font": "13.1.5",
     "@supabase/supabase-js": "^2.45.6",

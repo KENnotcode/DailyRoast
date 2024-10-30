@@ -2,13 +2,39 @@ import React, { useState, useEffect } from "react";
 import { Input, Button, message } from "antd";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Head from "next/head";
+import axios from 'axios';
 
 const MyProfile = () => {
-  const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+  const [profileData, setProfileData] = useState(null); // Start with null or an object
+  const [loading, setLoading] = useState(true); // Optional: Loading state
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/users") // Adjust the API endpoint as needed
+      .then((response) => {
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          setProfileData(response.data[0]); // Get the first user or handle as needed
+        } else {
+          console.error('Received data is not an array or is empty:', response.data);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after fetching data
+      });
+  }, []);
+
+  // Optional: Handle loading state
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading message or spinner
+  }
+
+  // Handle case where profileData is not available
+  if (!profileData) {
+    return <div>No user data available.</div>;
+  }
 
   return (
     <>
@@ -58,5 +84,6 @@ const MyProfile = () => {
     </>
   );
 };
+
 
 export default MyProfile;
