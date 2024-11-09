@@ -1,21 +1,44 @@
 import Image from "next/image";
-import { Dropdown, Space, Badge, Menu } from "antd";
+import { Dropdown, Space, Badge, Menu, Modal, Button } from "antd"; // Import Modal and Button from antd
 import {
   DownOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-} from "@ant-design/icons"; // Import UserOutlined
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import Navlink from "./Navlink";
 import { CoffeTypes, linkList } from "@/utils/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import axios from "axios";
 
 const Navbar = ({ totalQuantity, isSidebar }) => {
   const router = useRouter();
   const [navbar, setNavbar] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   const MAX_DISPLAY_ITEMS = 5;
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/session", { withCredentials: true });
+        setIsLoggedIn(!!response.data.sessionId); // Check if sessionId exists
+        if (response.data.sessionId) {
+          const userResponse = await axios.get("/api/auth/profile", { withCredentials: true });
+          setUser (userResponse.data);
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   useEffect(() => {
     if (!isSidebar) {
@@ -29,7 +52,6 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
         window.removeEventListener("scroll", changeBackground);
       };
     } else {
-      // If in sidebar, set navbar to true to have a static background
       setNavbar(true);
     }
   }, [isSidebar]);
@@ -41,17 +63,15 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
     }
   }, [totalQuantity]);
 
-  const totalQuantityInCart =
-    cartItems && Array.isArray(cartItems)
-      ? cartItems.reduce((total, item) => total + (item.quantity || 1), 0)
-      : 0;
+  const totalQuantityInCart = cartItems?.reduce(
+    (total, item) => total + (item.quantity || 1),
+    0
+  );
 
-  // Get unique product names from cartItems
   const uniqueProducts = Array.from(
     new Set(cartItems.map((item) => item.name))
   );
 
-  // Count of additional products beyond the maximum display limit
   const additionalProductsCount =
     uniqueProducts.length > MAX_DISPLAY_ITEMS
       ? uniqueProducts.length - MAX_DISPLAY_ITEMS
@@ -59,19 +79,30 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
 
   const scrollToHome = () => {
     const homeSection = document.getElementById("home");
-
     if (homeSection) {
-      // If already on the homepage, scroll smoothly to #home
       homeSection.scrollIntoView({ behavior: "smooth" });
     } else {
-      // Navigate to the homepage and scroll to #home once loaded
       router.push("/#home").then(() => {
-        const homeSectionAfterNav = document.getElementById("home");
-        if (homeSectionAfterNav) {
-          homeSectionAfterNav.scrollIntoView({ behavior: "smooth" });
-        }
+        document.getElementById("home")?.scrollIntoView({ behavior: "smooth" });
       });
     }
+  };
+
+  const handleProfileClick = () => {
+    if (!isLoggedIn) {
+      setIsModalVisible(true); // Show modal if not logged in
+    } else {
+      router.push("/Dashboard/MyProfile"); // Navigate if logged in
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleLoginRedirect = () => {
+    setIsModalVisible(false);
+    router.push("/SignupLogin?mode=login");
   };
 
   const cartMenu = (
@@ -86,7 +117,7 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
                   <p>{itemName}</p>
                   <div className="flex gap-1 bg-[#b77b2e] rounded-md p-1 w-16">
                     <p className="flex justify-end px-3">
-                      {item.price.toFixed(2)} {/* Display item price */}
+                      {item.price.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -118,14 +149,18 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
 
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile">
-        <Link href="/Dashboard/MyProfile">Profile</Link>
+      <Menu.Item key="profile" onClick={handleProfileClick}>
+        Profile
       </Menu.Item>
       <Menu.Item key="login">
-        <Link href="/SignupLogin">Login</Link>
+        <Link href={{ pathname: "/SignupLogin", query: { mode: "login" } }}>
+          Login
+        </Link>
       </Menu.Item>
       <Menu.Item key="signup">
-        <Link href="/SignupLogin">Sign Up</Link>
+        <Link href={{ pathname: "/SignupLogin", query: { mode: "signup" } }}>
+          Sign Up
+        </Link>
       </Menu.Item>
     </Menu>
   );
@@ -202,6 +237,45 @@ const Navbar = ({ totalQuantity, isSidebar }) => {
           </ul>
         </div>
       </div>
+
+      <Modal
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        centered
+      >
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <InfoCircleOutlined
+            style={{ fontSize: "50px", color: "#ff0000", marginBottom: "10px" }}
+          />
+          <h2
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              marginBottom: "10px",
+            }}
+          >
+            Access Denied
+          </ h2>
+          <p style={{ marginBottom: "20px" }}>
+            To view your profile, please log in to your account.
+          </p>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+            className="pt-4"
+          >
+            <Button
+              onClick={handleLoginRedirect}
+              style={{ borderColor: "#d9d9d9" }}
+            >
+              Log In
+            </Button>
+            <Button type="primary" danger onClick={handleCancel}>
+              Close
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

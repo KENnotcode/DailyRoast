@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Button, Input, Form } from "antd";
+import { Button, Input, Form, message } from "antd";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { message } from "antd";
 import { useRouter } from "next/router";
 import { CheckOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import Axios from "axios";
 
 const SignupLogin = () => {
   const router = useRouter();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const { mode } = router.query;
+  const [isSignUp, setIsSignUp] = useState(mode === "signup");
+
   const [inputValues, setInputValues] = useState({
     firstName: "",
     lastName: "",
@@ -50,21 +51,29 @@ const SignupLogin = () => {
     try {
       if (isSignUp) {
         // Sign Up logic
-        const response = await Axios.post("http://localhost:5000/api/signup", {
-          firstName: inputValues.firstName,
-          lastName: inputValues.lastName,
-          email: inputValues.email,
-          password: inputValues.password,
-        });
+        const response = await Axios.post(
+          "http://localhost:5000/api/signup",
+          {
+            firstName: inputValues.firstName,
+            lastName: inputValues.lastName,
+            email: inputValues.email,
+            password: inputValues.password,
+          },
+          { withCredentials: true }
+        );
 
         message.success(response.data.msg);
         setIsSignUp(false);
       } else {
         // Login using your backend
-        const response = await Axios.post("http://localhost:5000/api/login", {
-          email: inputValues.email,
-          password: inputValues.password,
-        });
+        const response = await Axios.post(
+          "http://localhost:5000/api/login",
+          {
+            email: inputValues.email,
+            password: inputValues.password,
+          },
+          { withCredentials: true }
+        );
 
         message.success(response.data.msg);
         router.push("/Dashboard/MyProfile"); // Redirect to the dashboard or another page
@@ -297,6 +306,7 @@ const SignupLogin = () => {
           {isSignUp && (
             <Form.Item
               name="confirmPassword"
+              dependencies={"password"}
               rules={[
                 { required: true, message: "Please confirm your Password!" },
                 { validator: validateConfirmPassword },
@@ -325,7 +335,7 @@ const SignupLogin = () => {
               className="w-[100px] text-tahiti hover:scale-110 bg-addtocartcolor transition duration-300 ease-in-out rounded-lg py-2"
               style={{ borderRadius: "8px" }}
             >
-              {isSignUp ? "Sign Up" : "Sign In"}
+              {isSignUp ? "Sign Up" : "Login"}
             </Button>
           </Form.Item>
         </Form>
@@ -337,7 +347,7 @@ const SignupLogin = () => {
               onClick={() => setIsSignUp(!isSignUp)}
               className=" font-bold hover:text-mlue duration-200 pl-2 hover:scale-125"
             >
-              {isSignUp ? "Sign In" : "Sign Up"}
+              {isSignUp ? "Login" : "Sign Up"}
             </Button>
           </p>
         </div>
